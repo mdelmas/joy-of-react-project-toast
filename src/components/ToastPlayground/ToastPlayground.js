@@ -4,6 +4,7 @@ import Button from "../Button";
 import Toast from "../Toast";
 
 import styles from "./ToastPlayground.module.css";
+import ToastShelf from "../ToastShelf/ToastShelf";
 
 const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 
@@ -11,9 +12,29 @@ function ToastPlayground() {
   const [message, setMessage] = React.useState("");
   const [variant, setVariant] = React.useState(VARIANT_OPTIONS[0]);
 
-  const [displayToast, setDisplayToast] = React.useState(false);
+  // const [displayToast, setDisplayToast] = React.useState(false);
 
-  console.log("displayToast", displayToast);
+  const [toasts, setToasts] = React.useState([
+    { id: crypto.randomUUID(), message: "hello", variant: "notice" },
+    { id: crypto.randomUUID(), message: "HELP!", variant: "warning" },
+  ]);
+  console.log(toasts);
+
+  const createNewToast = () => {
+    setToasts([
+      ...toasts,
+      {
+        id: crypto.randomUUID(),
+        message: message,
+        variant: variant,
+      },
+    ]);
+    setMessage("");
+    setVariant("notice");
+  };
+
+  const handleRemoveToast = (id) =>
+    setToasts(toasts.filter((toast) => toast.id !== id));
 
   return (
     <div className={styles.wrapper}>
@@ -22,13 +43,7 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      {displayToast && (
-        <Toast
-          message={message}
-          variant={variant}
-          handleClose={() => setDisplayToast(false)}
-        />
-      )}
+      <ToastShelf toasts={toasts} removeToast={handleRemoveToast} />
 
       <div className={styles.controlsWrapper}>
         <div className={styles.row}>
@@ -71,7 +86,7 @@ function ToastPlayground() {
         <div className={styles.row}>
           <div className={styles.label} />
           <div className={`${styles.inputWrapper} ${styles.radioWrapper}`}>
-            <Button onClick={() => setDisplayToast(true)}>Pop Toast!</Button>
+            <Button onClick={() => createNewToast()}>Pop Toast!</Button>
           </div>
         </div>
       </div>
