@@ -11,14 +11,7 @@ const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 function ToastPlayground() {
   const [message, setMessage] = React.useState("");
   const [variant, setVariant] = React.useState(VARIANT_OPTIONS[0]);
-
-  // const [displayToast, setDisplayToast] = React.useState(false);
-
-  const [toasts, setToasts] = React.useState([
-    { id: crypto.randomUUID(), message: "hello", variant: "notice" },
-    { id: crypto.randomUUID(), message: "HELP!", variant: "warning" },
-  ]);
-  console.log(toasts);
+  const [toasts, setToasts] = React.useState([]);
 
   const createNewToast = () => {
     setToasts([
@@ -33,7 +26,7 @@ function ToastPlayground() {
     setVariant("notice");
   };
 
-  const handleRemoveToast = (id) =>
+  const handleCloseToast = (id) =>
     setToasts(toasts.filter((toast) => toast.id !== id));
 
   return (
@@ -43,9 +36,15 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      <ToastShelf toasts={toasts} removeToast={handleRemoveToast} />
+      <ToastShelf toasts={toasts} handleCloseToast={handleCloseToast} />
 
-      <div className={styles.controlsWrapper}>
+      <form
+        className={styles.controlsWrapper}
+        onSubmit={(event) => {
+          event.preventDefault();
+          createNewToast();
+        }}
+      >
         <div className={styles.row}>
           <label
             htmlFor="message"
@@ -86,10 +85,10 @@ function ToastPlayground() {
         <div className={styles.row}>
           <div className={styles.label} />
           <div className={`${styles.inputWrapper} ${styles.radioWrapper}`}>
-            <Button onClick={() => createNewToast()}>Pop Toast!</Button>
+            <Button>Pop Toast!</Button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
