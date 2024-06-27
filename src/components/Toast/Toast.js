@@ -26,13 +26,17 @@ function Toast({ data, handleClose }) {
       <div className={styles.iconContainer}>
         <Icon size={24} />
       </div>
-      <p className={styles.content}>{data.message}</p>
+      <p className={styles.content}>
+        <VisuallyHidden>{`${data.variant} - `}</VisuallyHidden>
+        {data.message}
+      </p>
       <button
         className={styles.closeButton}
         onClick={() => handleClose(data.id)}
+        aria-label="Dismiss message"
+        aria-live="off"
       >
         <X size={24} />
-        <VisuallyHidden>Dismiss message</VisuallyHidden>
       </button>
     </div>
   );
